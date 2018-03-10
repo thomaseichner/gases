@@ -37,7 +37,9 @@ class DataLoader(python_general.library.configreader.ConfigReader):
         return answer
 
     def get_data_as_dataframe(self, data):
-        return pd.read_csv(io.StringIO(data.decode('cp1252')), sep=';')
+        frame = pd.read_csv(io.StringIO(data.decode('cp1252')), sep=';')
+        frame["Zeit"] = pd.to_datetime(frame.Zeit)
+        return frame
 
 
 if __name__ == '__main__':
