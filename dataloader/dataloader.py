@@ -11,6 +11,7 @@ import pandas as pd
 import urllib
 import urllib.request
 import io
+import sqlalchemy
 
 import python_general.library.configreader
 
@@ -41,11 +42,25 @@ class DataLoader(python_general.library.configreader.ConfigReader):
         frame["Zeit"] = pd.to_datetime(frame.Zeit)
         return frame
 
+    def write_frame_to_db(self, frame, db_con, if_exists="fail"):
+        frame.to_sql("{}_data".format(self.pollutant_type), con=db_con, chunksize=1000, if_exists=if_exists,
+                     schema=self.config["target_db_schema"])
+        self.log.info("Written data of shape: {} to db".format(frame.shape))
+
+    def create_db_connection(self):
+        connect_string = "{user}:{pwd}@{ip}/{schema}".format(user=self.config['target_db_user'],
+                                                             pwd=self.config["target_db_pwd"],
+                                                             ip=self.config["target_db_ip"],
+                                                             schema=self.config["target_db_schema"])
+        eng = sqlalchemy.create_engine('mysql+pymysql://{}'.format(connect_string), echo=True)
+        self.log.info("Created target db connection for db: {}".format(connect_string))
+        return eng
+
 
 if __name__ == '__main__':
     dl = DataLoader('NO2', (datetime.datetime(2018, 3, 1), datetime.datetime(2018, 3, 2)), loglevel='DEBUG', config_file="../config.yml")
     frame = dl.get_data_as_dataframe(dl.get_raw_data())
-    print(frame.head())
+    dl.write_frame_to_db(frame, dl.create_db_connection(), if_exists="replace")
 
 
 
