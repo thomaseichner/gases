@@ -39,7 +39,7 @@ class DataLoader(python_general.library.configreader.ConfigReader):
 
     def get_data_as_dataframe(self, data):
         frame = pd.read_csv(io.StringIO(data.decode('cp1252')), sep=';')
-        frame["Zeit"] = pd.to_datetime(frame.Zeit)
+        frame["Zeit"] = pd.to_datetime(frame.Zeit, dayfirst=True)
         return frame
 
     def write_frame_to_db(self, frame, db_con, if_exists="fail"):
@@ -58,7 +58,7 @@ class DataLoader(python_general.library.configreader.ConfigReader):
 
 
 if __name__ == '__main__':
-    dl = DataLoader('NO2', (datetime.datetime(2018, 2, 1), datetime.datetime(2018, 3, 1)), loglevel='DEBUG', config_file="../config.yml")
+    dl = DataLoader('NO2', (datetime.datetime(2017, 8, 1), datetime.datetime(2017, 8, 2)), loglevel='DEBUG', config_file="../config.yml")
     frame = dl.get_data_as_dataframe(dl.get_raw_data())
     dl.write_frame_to_db(frame, dl.create_db_connection(), if_exists="append")
 
