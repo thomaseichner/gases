@@ -12,6 +12,7 @@ except:
 
 import python_general.library.configreader
 
+
 class SensorReader(python_general.library.configreader.ConfigReader):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -20,12 +21,13 @@ class SensorReader(python_general.library.configreader.ConfigReader):
         self.log.info("Opening to: {}, {}".format(self.config.get('channel'), self.config.get('bus')))
         self.sd.open(self.config.get('channel'), self.config.get('bus'))
 
-    def read_value(self):
+    def read_value(self, read_arguments):
         self.log.debug("Reading values with config: {}".format(self.config.get('read_arguments')))
-        ret = self.sd.xfer2(self.config.get('read_arguments'))
+        ret = self.sd.xfer2(read_arguments)
         self.log.debug("Got answer: {}".format(ret))
         return ret
 
+
 if __name__ == '__main__':
     sr = SensorReader(config_file="../config.yml", loglevel='DEBUG')
-    print(sr.read_value())
+    print(sr.read_value([1, 128, 0]))
