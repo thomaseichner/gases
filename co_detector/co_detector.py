@@ -14,6 +14,7 @@ import sys
 import python_general.library.configreader
 
 import sensor_reader
+import data_logger
 
 
 class CODetector(python_general.library.configreader.ConfigReader):
@@ -30,6 +31,7 @@ class CODetector(python_general.library.configreader.ConfigReader):
         else:
             self.log.info('Starting detector')
             self.sr = sensor_reader.SensorReader(*args, **kwargs)
+            self.dl = data_logger.DataLogger(*args, **kwargs)
 
     def check_for_running(self):
         files = self.get_status_files()
@@ -55,7 +57,9 @@ class CODetector(python_general.library.configreader.ConfigReader):
 
     def run_once(self):
         self.log.debug('Starting single cycle')
-        return self.sr.read_value(self.read_arguments)
+        values = self.sr.read_value(self.read_arguments)
+        self.dl.write_values(self.read_arguments, values)
+        return values
 
     def run_cycles(self, max_cycles=float('inf')):
         current_cycle = 0
