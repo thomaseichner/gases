@@ -87,5 +87,5 @@ class CODetector(python_general.library.configreader.ConfigReader):
 
 
 if __name__ == '__main__':
-    cod = CODetector(config_file='../config.yml', loglevel='DEBUG')
+    cod = CODetector(config_file='/home/thomas/blog/gases/gases/config.yml', loglevel='DEBUG')
     cod.run_cycles(100)
