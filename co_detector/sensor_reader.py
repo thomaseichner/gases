@@ -22,7 +22,7 @@ class SensorReader(python_general.library.configreader.ConfigReader):
         self.sd.open(self.config.get('channel'), self.config.get('bus'))
 
     def read_value(self, read_arguments):
-        self.log.debug("Reading values with config: {}".format(self.config.get('read_arguments')))
+        self.log.debug("Reading values with config: {}".format(read_arguments))
         ret = self.sd.xfer2(read_arguments)
         self.log.debug("Got answer: {}".format(ret))
         return ret
