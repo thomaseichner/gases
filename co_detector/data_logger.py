@@ -31,7 +31,7 @@ class DataLogger(python_general.library.configreader.ConfigReader):
                                  ['DATETIME', 'REAL', 'REAL', 'REAL', 'REAL', 'REAL', 'REAL'])
 
     def write_values(self, read_args, sensor_readings):
-        values = [datetime.datetime.now(), *read_args, *sensor_readings]
+        values = [datetime.datetime.now()] + read_args + sensor_readings
         self.log.debug('Writing entry: {}'.format(values))
         self.db.insert_single_row(self.config.get('table_name'), values, COLUMNS)
 
