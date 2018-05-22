@@ -11,7 +11,7 @@ import time
 import python_general.tools.singleton
 
 import sensor_reader
-import data_logger
+import tools.data_logger
 
 
 class CODetector(python_general.tools.singleton.Singleton):
@@ -24,7 +24,7 @@ class CODetector(python_general.tools.singleton.Singleton):
     def startup(self, *args, **kwargs):
             self.log.info('Starting detector')
             self.sr = sensor_reader.SensorReader(*args, **kwargs)
-            self.dl = data_logger.DataLogger(*args, **kwargs)
+            self.dl = tools.data_logger.DataLogger(*args, **kwargs)
 
 
     @property
@@ -50,6 +50,8 @@ class CODetector(python_general.tools.singleton.Singleton):
         finally:
             self.delete_status_file()
 
+
 if __name__ == '__main__':
-    cod = CODetector(config_file='/home/thomas/blog/gases/gases/config.yml', loglevel='DEBUG')
+    cod = CODetector(config_file='/home/thomas/blog/gases/gases/config.yml', loglevel='DEBUG',
+                     config_toplevel='co_detector')
     cod.run_cycles(100)
