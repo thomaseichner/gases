@@ -19,7 +19,7 @@ class SensorReader(python_general.library.configreader.ConfigReader):
         super().__init__(*args, **kwargs)
         self.config = self.config.get('th_detector').get(self.__class__.__name__.lower())
 
-    def read_value(self):
+    def read_value(self, *args, **kwargs):
         self.log.debug("Reading values with config: ({}, {})".format(self.config.get('model'), self.config.get('pin')))
         ret = Adafruit_DHT.read_retry(self.config.get('model'), self.config.get('pin'))
         self.log.debug("Got answer: {}".format(ret))
